@@ -259,8 +259,8 @@ public class Main {
         String password = "morten@70";
 
         try {
-            Connection conn = DriverManager.getConnection(url, username, password);
             Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, username, password);
             System.out.println("Driver loaded!");
         } catch (SQLException e) {
             e.printStackTrace();
