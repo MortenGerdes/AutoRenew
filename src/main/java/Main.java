@@ -305,6 +305,7 @@ public class Main {
                     .build();
             TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/20 * * * * ?"));
             sched.scheduleJob(job, ct.build());
+            sched.start();
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
