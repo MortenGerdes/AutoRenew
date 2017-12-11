@@ -4,6 +4,9 @@ import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.quartz.*;
+import org.quartz.impl.QuartzServer;
+import org.quartz.impl.StdSchedulerFactory;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 
@@ -11,10 +14,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 import static spark.Spark.*;
@@ -31,10 +31,11 @@ public class Main {
     public static void main(String[] args) throws Exception
     {
         Main http = new Main();
-        port(1338);
+        port(1337);
         http.connectToDB();
         http.registerGetRoutes();
         http.registerPostRoutes();
+        http.autoReapplyForAllUsers();
     }
 
     public Main() throws IOException, SQLException {
@@ -289,6 +290,24 @@ public class Main {
             e.printStackTrace();
         }
         return (rowsAffected == 1);
+    }
+
+    private void autoReapplyForAllUsers()
+    {
+        try {
+            SchedulerFactory sf = new StdSchedulerFactory();
+            Scheduler sched = sf.getScheduler();
+            JobDataMap jdm = new JobDataMap();
+            jdm.put("dbconn", dbConn);
+            jdm.put("main", this);
+            JobDetail job = JobBuilder.newJob(ReapplyJob.class)
+                    .setJobData(jdm)
+                    .build();
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/20 * * * * ?"));
+            sched.scheduleJob(job, ct.build());
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
     }
 
 }
