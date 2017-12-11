@@ -263,10 +263,9 @@ public class Main {
         String url = "jdbc:mysql://localhost:3306/autorenew";
         String username = "root";
         String password = "morten@70";
-
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(url, username, password);
+            dbConn = DriverManager.getConnection(url, username, password);
             System.out.println("Driver loaded!");
         } catch (SQLException e) {
             e.printStackTrace();
