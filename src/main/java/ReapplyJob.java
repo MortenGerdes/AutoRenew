@@ -13,8 +13,8 @@ public class ReapplyJob implements Job
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
         String sql = "select * from autorenewdb";
-        Connection conn = (Connection) context.get("dbconn");
-        Main http = (Main) context.get("main");
+        Main http = Main.http;
+        Connection conn = http.getDBConnection();
 
         try {
             Statement statement = conn.createStatement();

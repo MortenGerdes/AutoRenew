@@ -25,12 +25,13 @@ public class Main {
     private List<String> cookies;
     private HttpsURLConnection conn;
     private Connection dbConn;
-
     private final String USER_AGENT = "Mozilla/5.0";
+
+    static Main http;
 
     public static void main(String[] args) throws Exception
     {
-        Main http = new Main();
+        http = new Main();
         port(1337);
         http.connectToDB();
         http.registerGetRoutes();
@@ -248,17 +249,6 @@ public class Main {
         }, fme);
     }
 
-    public static Map<String, String> splitQuery(String url) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new LinkedHashMap<>();
-        String query = url;
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
-        }
-        return query_pairs;
-    }
-
     private void connectToDB()
     {
         String url = "jdbc:mysql://localhost:3306/autorenew";
@@ -309,6 +299,22 @@ public class Main {
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
+    }
+
+    public Connection getDBConnection()
+    {
+        return dbConn;
+    }
+
+    public static Map<String, String> splitQuery(String url) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<>();
+        String query = url;
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+        }
+        return query_pairs;
     }
 
 }
