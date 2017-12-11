@@ -57,7 +57,6 @@
             <version>${spark.freemarker.version}</version>
         </dependency>
 
-        <!-- Freemarker -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -81,6 +80,12 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.6</version>
         </dependency>
     </dependencies>
 
