@@ -256,7 +256,7 @@ public class Main {
     {
         String url = "jdbc:mysql://localhost:3306/autorenew";
         String username = "root";
-        String password = "morten";
+        String password = "morten@70";
 
         try {
             Connection conn = DriverManager.getConnection(url, username, password);
