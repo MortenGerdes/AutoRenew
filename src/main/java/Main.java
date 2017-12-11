@@ -105,7 +105,7 @@ public class Main {
         in.close();
     }
 
-    private ResponseObject getPageContent(String url, boolean shouldBeLoggedIn) throws Exception {
+    private synchronized ResponseObject getPageContent(String url, boolean shouldBeLoggedIn) throws Exception {
 
         URL obj = new URL(url);
         ResponseObject ro = new ResponseObject();
@@ -292,7 +292,7 @@ public class Main {
             JobDetail job = JobBuilder.newJob(ReapplyJob.class)
                     .setJobData(jdm)
                     .build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/20 * * * * ?"));
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/40 * * * * ?"));
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
