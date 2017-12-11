@@ -90,8 +90,6 @@ public class Main {
         wr.close();
 
         int responseCode = conn.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + postParams);
         System.out.println("Response Code : " + responseCode);
 
         BufferedReader in =
@@ -127,7 +125,6 @@ public class Main {
             }
         }
         int responseCode = conn.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
 
         BufferedReader in =
                 new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -153,9 +150,6 @@ public class Main {
 
     public String getFormParams(String html, String username, String password)
             throws UnsupportedEncodingException {
-
-        System.out.println("Extracting form's data...");
-
         Document doc = Jsoup.parse(html);
 
         Element loginform = doc.getElementById("user-login");
@@ -253,7 +247,7 @@ public class Main {
     {
         String url = "jdbc:mysql://localhost:3306/autorenew";
         String username = "root";
-        String password = "morten@70";
+        String password = "morteng";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             dbConn = DriverManager.getConnection(url, username, password);
@@ -292,7 +286,7 @@ public class Main {
             JobDetail job = JobBuilder.newJob(ReapplyJob.class)
                     .setJobData(jdm)
                     .build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/40 * * * * ?"));
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 0/7 * ?"));
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
