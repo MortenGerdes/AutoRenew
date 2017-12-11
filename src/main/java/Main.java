@@ -286,7 +286,7 @@ public class Main {
             JobDetail job = JobBuilder.newJob(ReapplyJob.class)
                     .setJobData(jdm)
                     .build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 0/7 * ?"));
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 ? * 1"));
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
