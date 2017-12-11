@@ -277,18 +277,18 @@ public class Main {
 
     private boolean insertIntoDB(String username, String password)
     {
-        boolean toReturn = false;
+        int rowsAffected = 0;
         String query = "INSERT INTO autorenewdb (apply_number, pass) VALUES (?, ?)";
         try {
             PreparedStatement ps = dbConn.prepareStatement(query);
             ps.setString(1, username);
             ps.setString(2, password);
-            toReturn = ps.execute();
+            rowsAffected = ps.executeUpdate();
             dbConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return toReturn;
+        return (rowsAffected == 1);
     }
 
 }
