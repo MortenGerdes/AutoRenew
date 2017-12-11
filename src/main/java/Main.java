@@ -217,6 +217,7 @@ public class Main {
         post("autorenew/register", (req, res) ->
         {
             int username, password, responseCode;
+            String message = "Invalid username or password. Make sure your username and password <br>consists of purely numbers";
             Map<String, Object> map = new HashMap<>();
             Map<String, String> params = splitQuery(req.body());
             try {
@@ -225,17 +226,22 @@ public class Main {
             }
             catch(NumberFormatException e)
             {
-                map.put("message", "Invalid username or password. Make sure your username and password <br>consists of purely numbers");
+                map.put("message", message);
                 return new ModelAndView(map, "register.ftl");
             }
             responseCode = renewSubscription(username+"", password+"");
             if(responseCode == HttpServletResponse.SC_OK)
             {
-                map.put("message", "You were logged in successfully on ungdomsboligaarhus. Enjoy your laziness");
+                message = "You were logged in successfully on ungdomsboligaarhus, but weren't added to the database??? wut?.";
+                if(insertIntoDB(username+"", password+""))
+                {
+                    message = "You were logged in on ungdomsboligaarhus and added to the database successfully. Enjoy your laziness";
+                }
+                map.put("message", message);
             }
             else
             {
-                map.put("message", "Your credentials were rejected by ungdomsboligaarhus. Ensure you typed it right");
+                map.put("message", "Your credentials were rejected by ungdomsboligaarhus. Make sure you typed it right");
             }
             return new ModelAndView(map, "register.ftl");
         }, fme);
