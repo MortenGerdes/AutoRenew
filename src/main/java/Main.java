@@ -275,7 +275,6 @@ public class Main {
             ps.setString(1, username);
             ps.setString(2, password);
             rowsAffected = ps.executeUpdate();
-            dbConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
