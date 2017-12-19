@@ -301,7 +301,7 @@ public class Main {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
             JobDetail job = JobBuilder.newJob(ReapplyJob.class).build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/40 * * * * ?")); // "0 0 13 ? * 1"
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 ? * 1"));
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {

@@ -21,8 +21,9 @@ public class ReapplyJob implements Job
             while(rs.next()) {
                 int username = rs.getInt("apply_number");
                 int pass = rs.getInt("pass");
-                http.renewSubscription(username+"", pass+"");
                 System.out.println("reapplying for user: " + username);
+                http.renewSubscription(username+"", pass+"");
+                System.out.println("");
             }
             conn.close();
         } catch (SQLException e) {
