@@ -265,7 +265,7 @@ public class Main {
         int rowsAffected = 0;
         String query = "INSERT INTO autorenewdb (apply_number, pass) VALUES (?, ?)";
         try {
-            PreparedStatement ps = dbConn.prepareStatement(query);
+            PreparedStatement ps = getDBConnection().prepareStatement(query);
             ps.setString(1, username);
             ps.setString(2, password);
             rowsAffected = ps.executeUpdate();
@@ -286,7 +286,7 @@ public class Main {
             JobDetail job = JobBuilder.newJob(ReapplyJob.class)
                     .setJobData(jdm)
                     .build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/40 * * * * ?")); // "0 0 13 ? * 1"
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 ? * 1"));
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
