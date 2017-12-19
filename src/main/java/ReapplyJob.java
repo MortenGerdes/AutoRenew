@@ -24,6 +24,7 @@ public class ReapplyJob implements Job
                 http.renewSubscription(username+"", pass+"");
                 System.out.println("reapplying for user: " + username);
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {

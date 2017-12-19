@@ -94,6 +94,12 @@
             <version>2.2.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jolbox</groupId>
+            <artifactId>bonecp</artifactId>
+            <version>0.8.0.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <properties>

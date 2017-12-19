@@ -1,3 +1,5 @@
+import com.jolbox.bonecp.BoneCP;
+import com.jolbox.bonecp.BoneCPConfig;
 import freemarker.template.Configuration;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
@@ -24,6 +26,7 @@ public class Main {
     private FreeMarkerEngine fme;
     private List<String> cookies;
     private HttpsURLConnection conn;
+    private BoneCP connectionPool;
     private Connection dbConn;
     private final String USER_AGENT = "Mozilla/5.0";
 
@@ -33,7 +36,7 @@ public class Main {
     {
         port(1337);
         http = new Main();
-        http.connectToDB();
+        http.setupConnectionPool();
         http.registerGetRoutes();
         http.registerPostRoutes();
         http.autoReapplyForAllUsers();
@@ -243,7 +246,23 @@ public class Main {
         }, fme);
     }
 
-    private void connectToDB()
+    private void setupConnectionPool()
+    {
+        BoneCPConfig config = new BoneCPConfig();
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/autorenew");
+        config.setUsername("root");
+        config.setPassword("morteng");
+        config.setMinConnectionsPerPartition(5);
+        config.setMaxConnectionsPerPartition(10);
+        config.setPartitionCount(1);
+        try {
+            connectionPool = new BoneCP(config);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*    private void connectToDB()
     {
         String url = "jdbc:mysql://localhost:3306/autorenew";
         String username = "root";
@@ -258,7 +277,7 @@ public class Main {
             System.out.println("Driver wasn't found!");
             e.printStackTrace();
         }
-    }
+    }*/
 
     private boolean insertIntoDB(String username, String password)
     {
@@ -269,6 +288,7 @@ public class Main {
             ps.setString(1, username);
             ps.setString(2, password);
             rowsAffected = ps.executeUpdate();
+            dbConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -280,13 +300,8 @@ public class Main {
         try {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
-            JobDataMap jdm = new JobDataMap();
-            jdm.put("dbconn", dbConn);
-            jdm.put("main", this);
-            JobDetail job = JobBuilder.newJob(ReapplyJob.class)
-                    .setJobData(jdm)
-                    .build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 ? * 1"));
+            JobDetail job = JobBuilder.newJob(ReapplyJob.class).build();
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/40 * * * * ?")); // "0 0 13 ? * 1"
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
@@ -297,7 +312,7 @@ public class Main {
     public Connection getDBConnection() throws SQLException {
         if(dbConn == null || dbConn.isClosed())
         {
-            connectToDB();
+            dbConn = connectionPool.getConnection();
         }
         return dbConn;
     }
