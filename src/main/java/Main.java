@@ -31,8 +31,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception
     {
-        http = new Main();
         port(1337);
+        http = new Main();
         http.connectToDB();
         http.registerGetRoutes();
         http.registerPostRoutes();
@@ -286,7 +286,7 @@ public class Main {
             JobDetail job = JobBuilder.newJob(ReapplyJob.class)
                     .setJobData(jdm)
                     .build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 ? * 1"));
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/40 * * * * ?")); // "0 0 13 ? * 1"
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
@@ -294,8 +294,11 @@ public class Main {
         }
     }
 
-    public Connection getDBConnection()
-    {
+    public Connection getDBConnection() throws SQLException {
+        if(dbConn == null || dbConn.isClosed())
+        {
+            connectToDB();
+        }
         return dbConn;
     }
 

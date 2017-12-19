@@ -14,9 +14,8 @@ public class ReapplyJob implements Job
     {
         String sql = "select * from autorenewdb";
         Main http = Main.http;
-        Connection conn = http.getDBConnection();
-
         try {
+            Connection conn = http.getDBConnection();
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while(rs.next()) {
