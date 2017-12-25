@@ -249,7 +249,7 @@ public class Main {
     private void setupConnectionPool()
     {
         BoneCPConfig config = new BoneCPConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/autorenew");
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/autorenew?autoReconnect=true&useSSL=false");
         config.setUsername("root");
         config.setPassword("morteng");
         config.setMinConnectionsPerPartition(5);
@@ -301,7 +301,7 @@ public class Main {
             SchedulerFactory sf = new StdSchedulerFactory();
             Scheduler sched = sf.getScheduler();
             JobDetail job = JobBuilder.newJob(ReapplyJob.class).build();
-            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/50 * * * * ?"));
+            TriggerBuilder<CronTrigger> ct = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0 0 13 ? * TUE"));
             sched.scheduleJob(job, ct.build());
             sched.start();
         } catch (SchedulerException e) {
