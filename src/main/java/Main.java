@@ -250,8 +250,7 @@ public class Main {
     {
         BoneCPConfig config = new BoneCPConfig();
         config.setJdbcUrl("jdbc:mysql://localhost:3306/autorenew?autoReconnect=true&useSSL=false");
-        config.setUsername("root");
-        config.setPassword("morteng");
+        config.setUsername("root"); //Plz no stealing <3
         config.setMinConnectionsPerPartition(5);
         config.setMaxConnectionsPerPartition(10);
         config.setPartitionCount(1);
